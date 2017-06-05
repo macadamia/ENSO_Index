@@ -108,7 +108,7 @@ shinyServer(function(input, output) {
 
     plot(month,anom,xlab='Month',ylab=paste('SOI anom ',soi.ave.period,' mth ave',sep=''),main=as.character(thisYear),ylim=c(ylim1,ylim2),axes=F,pch=ptype,col=colrs)
     axis(1,month,month.abb[month],tcl=-0.7,cex.axis=0.7)
-    axis(2)
+    axis(2,las=1)
     box()
     lines(rep(0,length(month)))
     y<-rep(soi.ln,length(4:max(month)))
@@ -135,19 +135,13 @@ shinyServer(function(input, output) {
         theurl <- paste('https://www1.ncdc.noaa.gov/pub/data/cmb/ersst/v3b/netcdf',ersstName,sep='/')
         download.file(theurl,nfile,method='curl')
         x<-file(nfile,'rb')
-        res <- try(d <- readLines(x),silent = T)
-        res2 <- try(d <- nc_open(nfile),silent=T)
-        if(inherits(res,'try-error')){
-          file.remove(nfile)
-          print(paste('Breaking on',ncfile))
-          break
-        } else {
-          print(paste('Downloaded',ersstName))
+        if(mth == thisMth){ # might not be available yet
+          if(length(grep('DOCTYPE',readLines(file(nfile,'r'),n=1)) > 0 )){
+            file.remove(nfile)
+            break
+          }
         }
-      } else {
-        print(paste('Found',nfile))
       }
-
       d <- nc_open(nfile)
       #get the SST
 
@@ -174,7 +168,24 @@ shinyServer(function(input, output) {
     anom34 <- rep(NA,12)
     #calculate anomalies
     anom34 <- n34 - mthnorms
-    print(anom34)
+    month <- 1:thisMth
+    ylim1<-min(-2,min(anom34,na.rm=T))
+    ylim2<-max(2,max(anom34,na.rm=T))
+    ptype<-rep(20,length(month))
+    ptype[month>=4]<-19
+    colrs<-rep('black',length(month))
+    colrs[anom34<= sst.ln]<-'blue'
+    colrs[anom34>= sst.en]<-'red'
+    plot(month,anom34[month],xlab='Month',ylab=paste('SST anom ',sst.ave.period,' mth ave',sep=''),ylim=c(ylim1,ylim2),axes=F,pch=ptype,col=colrs)
+    axis(1,month,month.abb[month],tcl=-0.7,cex.axis=0.7)
+    axis(2,las=1)
+    box()
+    lines(rep(0,length(month)))
+    y<-rep(sst.ln,length(4:max(month)))
+    x<-seq(4,max(month))
+    lines(x,y,col='blue')
+    y<-rep(sst.en,length(4:max(month)))
+    lines(x,y,col='red')
 
   })
 
