@@ -7,8 +7,20 @@
 
 library(shiny)
 library(ncdf4)
+library(rdrop2)
 
 shinyServer(function(input, output) {
+
+  token <- readRDS('droptoken.rds')
+  drop_acc(dtoken=token)
+
+  csvThere <- drop_get('ENSO/ensoclasses1961_1990.csv',overwrite=T,local_file = 'ensoclasses1961_1990.csv')
+  if(csvThere){
+    cat('found enso file\n')
+    ensoHistory <- read.csv('ensoclasses1961_1990.csv',header=T,stringsAsFactors = F)
+  } else {
+    cat('Did not find enso file')
+  }
 
   b1 <- 1961 # base period start
   b2 <- 1990 # end
@@ -19,6 +31,25 @@ shinyServer(function(input, output) {
   sst.ln <- -0.5
   sst.en <- 0.5
   sst.ave.period <- 5
+
+  output$downloadENSO <- downloadHandler(
+    filename = function() {
+      'ensoclasses1961_1990.csv'
+    },
+    content = function(file) {
+      write.csv(ensoHistory, file)
+    }
+  )
+
+  #Potgieter_et_al_ENSOFootprints2005.pdf
+  output$downloadPDF <- downloadHandler(
+    filename = function() {
+      'Potgieter_et_al_ENSOFootprints2005.pdf'
+    },
+    content = function(file) {
+      file.copy('Potgieter_et_al_ENSOFootprints2005.pdf', file)
+    }
+  )
 
   RunningAve<-function(x,n){
     #Moving Ave

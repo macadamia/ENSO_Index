@@ -12,16 +12,13 @@ shinyUI(fluidPage(
   # Application title
   titlePanel("ENSO Index"),
 
-  # Sidebar with a slider input for number of bins
-  sidebarLayout(
-    sidebarPanel(
-    ),
 
-    # Show a plot of the generated distribution
-    mainPanel(
-      plotOutput("soiPlot"),
+  helpText('Potgieter, A. B., G. L. Hammer, H. Meinke, R. C. Stone, and L. Goddard. 2005. Three Putative Types of El Niño Revealed by Spatial Variability in Impact on Australian Wheat Yield. Journal of Climate 18:1566–1574.'),
+  downloadButton('downloadPDF','Download PDF'),
+  downloadButton('downloadENSO', 'Download ENSO classification'),
+  plotOutput("soiPlot"),
 
-      plotOutput("sstPlot")
-    )
-  )
+  plotOutput("sstPlot")
+
+
 ))
