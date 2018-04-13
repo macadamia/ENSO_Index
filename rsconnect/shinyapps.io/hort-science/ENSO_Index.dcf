@@ -1,10 +1,12 @@
 name: ENSO_Index
 title: ENSO_Index
+username:
 account: hort-science
 server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
 appId: 186247
-bundleId: 906970
+bundleId: 1277560
 url: https://hort-science.shinyapps.io/ENSO_Index/
-when: 1500348920.1258
+when: 1521505113.00322
 asMultiple: FALSE
 asStatic: FALSE

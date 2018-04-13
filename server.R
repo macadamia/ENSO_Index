@@ -14,7 +14,7 @@ shinyServer(function(input, output) {
   token <- readRDS('droptoken.rds')
   drop_acc(dtoken=token)
 
-  csvThere <- drop_get('ENSO/ensoclasses1961_1990.csv',overwrite=T,local_file = 'ensoclasses1961_1990.csv')
+  csvThere <- drop_download('ENSO/ensoclasses1961_1990.csv',overwrite=T)
   if(csvThere){
     cat('found enso file\n')
     ensoHistory <- read.csv('ensoclasses1961_1990.csv',header=T,stringsAsFactors = F)
@@ -89,7 +89,7 @@ shinyServer(function(input, output) {
 
     thisYear <- as.numeric(format(Sys.Date(),'%Y'))
 
-    theurl<-'https://www.longpaddock.qld.gov.au/seasonalclimateoutlook/southernoscillationindex/soidatafiles/MonthlySOIPhase1887-1989Base.txt'
+    theurl<-'https://data.longpaddock.qld.gov.au/SeasonalClimateOutlook/SouthernOscillationIndex/SOIDataFiles/MonthlySOIPhase1887-1989Base.txt'
     download.file(theurl,'soi.txt',method='curl')
     conn<-file('soi.txt','r')
     soi<-read.table(conn,header=F,skip=1,col.names=c("year","month","index","phase"))
