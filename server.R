@@ -12,9 +12,9 @@ library(rdrop2)
 shinyServer(function(input, output) {
 
   token <- readRDS('droptoken.rds')
-  drop_acc(dtoken=token)
-
-  csvThere <- drop_download('ENSO/ensoclasses1961_1990.csv',overwrite=T)
+  #drop_acc(dtoken=token)
+  #drop_download(file.path('ChillCalcStore',dname), local_path='Data/',overwrite=T,dtoken=token)
+  csvThere <- drop_download('ENSO/ensoclasses1961_1990.csv',overwrite=T,dtoken=token)
   if(csvThere){
     cat('found enso file\n')
     ensoHistory <- read.csv('ensoclasses1961_1990.csv',header=T,stringsAsFactors = F)
